@@ -1,0 +1,10 @@
+@font-face{
+    font-family: PressStart;
+    src: url(../fonts/PressStart2P.ttf)
+}
+
+*{
+    font-family: PressStart;
+    color: #A4A1B0;
+    background-color: #3C3C3C;
+}
