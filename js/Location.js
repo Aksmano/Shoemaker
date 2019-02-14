@@ -1,16 +1,14 @@
 class Location {
     constructor(location) {
         this.location = location
+        this.root = document.getElementById("root")
         this.init()
     }
 
     init() {
-        var root = document.getElementById("root")
-
         this.place = document.createElement("p")
         this.place.id = "place"
         this.place.innerText = this.location.info
-        root.appendChild(this.place)
 
         this.image = document.createElement("img")
         this.image.src = "img/" + this.location.imgFile
@@ -18,10 +16,6 @@ class Location {
         this.image.style.backgroundColor = this.location.backg
         this.image.height = 200
         this.image.width = 320
-        root.appendChild(this.image)
-
-        this.gamerInfo = document.createElement("div")
-        this.gamerInfo.id = "gInfo"
 
         this.direction = document.createElement("p")
         this.direction.id = "dirs"
@@ -34,17 +28,14 @@ class Location {
             if (i < this.location.dirs.length - 1) this.course += ", "
         }
         this.direction.innerText = this.course
-        root.appendChild(this.direction)
 
         this.object = document.createElement("p")
-        this.object.id = "object"
+        this.object.id = "obj"
         this.object.innerText = "You see "
-        root.appendChild(this.object)
 
         this.equipment = document.createElement("p")
         this.equipment.id = "eq"
         this.equipment.innerText = "You are carrying "
-        root.appendChild(this.equipment)
 
         this.cmdLabel = document.createElement("label")
         this.cmdLabel.id = "cmdLabel"
@@ -52,13 +43,41 @@ class Location {
         this.commandLine = document.createElement("input")
         this.commandLine.id = "cmd"
         this.commandLine.type = "text"
+        this.commandLine.maxLength = 20
+        this.commandLine.addEventListener("keypress", (event) => {
+            if (event.which === 13) {
+                var val = document.getElementById("cmd").value
+                document.getElementById("cmd").value = ""
+                console.log(val)
+                if ((val == "W" || val == "WEST") && this.currLocation.directions().includes(val[0])) {
+                    this.C--
+                    this.removeRoot()
+                    this.addRoot()
+                    console.log(this.locations[this.W][this.C])
+                    this.locations[this.W][this.C].render()
+                    this.currLocation = this.locations[this.W][this.C]
+                }
+            }
+        })
+        this.commandLine.addEventListener("input", () => { this.commandLine.value = this.commandLine.value.toUpperCase() })
         this.cmdLabel.appendChild(this.commandLine)
-        root.appendChild(this.cmdLabel)
+        console.log("done");
 
+    }
+
+    render() {
+        this.root = document.getElementById("root")
+        this.root.appendChild(this.place)
+        this.root.appendChild(this.image)
+        this.root.appendChild(this.direction)
+        this.root.appendChild(this.object)
+        this.root.appendChild(this.equipment)
+        this.root.appendChild(this.cmdLabel)
         document.onload = this.commandLine.focus()
         document.addEventListener("click", () => { this.commandLine.focus() })
+    }
 
-        // document.body.appendChild(root)
-        // return document.getElementById("root")
+    directions(){
+        return this.location.dirs
     }
 }
