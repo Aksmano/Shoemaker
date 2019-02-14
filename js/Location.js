@@ -44,21 +44,6 @@ class Location {
         this.commandLine.id = "cmd"
         this.commandLine.type = "text"
         this.commandLine.maxLength = 20
-        this.commandLine.addEventListener("keypress", (event) => {
-            if (event.which === 13) {
-                var val = document.getElementById("cmd").value
-                document.getElementById("cmd").value = ""
-                console.log(val)
-                if ((val == "W" || val == "WEST") && this.currLocation.directions().includes(val[0])) {
-                    this.C--
-                    this.removeRoot()
-                    this.addRoot()
-                    console.log(this.locations[this.W][this.C])
-                    this.locations[this.W][this.C].render()
-                    this.currLocation = this.locations[this.W][this.C]
-                }
-            }
-        })
         this.commandLine.addEventListener("input", () => { this.commandLine.value = this.commandLine.value.toUpperCase() })
         this.cmdLabel.appendChild(this.commandLine)
         console.log("done");

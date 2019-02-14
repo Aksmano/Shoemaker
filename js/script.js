@@ -25,12 +25,6 @@ var game = {
         for (let i = 0; i < 7; i++) i >= 3 ? this.locations[5].push(new Location(locInfo.W6[i - 3])) : this.locations[5].push(0)
         console.log(this.locations);
     },
-    initGame() {
-        this.addRoot()
-        this.initLocations()
-        this.locations[this.W][this.C].render()
-        this.currLocation = this.locations[this.W][this.C]
-    },
     addConsoleStatments() {
         document.getElementById("cmd").addEventListener("keypress", (event) => {
             if (event.which === 13) {
@@ -40,17 +34,50 @@ var game = {
                 if ((val == "W" || val == "WEST") && this.currLocation.directions().includes(val[0])) {
                     this.C--
                     this.removeRoot()
-                    this.addRoot()
-                    console.log(this.locations[this.W][this.C])
-                    this.locations[this.W][this.C].render()
-                    this.currLocation = this.locations[this.W][this.C]
+                    this.initGame()
+                }
+                else if ((val == "E" || val == "EAST") && this.currLocation.directions().includes(val[0])) {
+                    this.C++
+                    this.removeRoot()
+                    this.initGame()
+                }
+                else if ((val == "N" || val == "NORTH") && this.currLocation.directions().includes(val[0])) {
+                    this.W--
+                    this.removeRoot()
+                    this.initGame()
+                }
+                else if ((val == "S" || val == "SOUTH") && this.currLocation.directions().includes(val[0])) {
+                    this.W++
+                    this.removeRoot()
+                    this.initGame()
                 }
             }
         })
+    },
+    initGame() {
+        this.addRoot()
+        this.currLocation = this.locations[this.W][this.C]
+        this.currLocation.render()
+        this.addConsoleStatments()
     }
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {
+    game.initLocations()
     game.initGame()
-    game.addConsoleStatments()
+    // document.getElementById("cmd").addEventListener("keypress", (event) => {
+    //     if (event.which === 13) {
+    //         var val = document.getElementById("cmd").value
+    //         document.getElementById("cmd").value = ""
+    //         console.log(val)
+    //         if ((val == "W" || val == "WEST") && game.currLocation.directions().includes(val[0])) {
+    //             game.C--
+    //             game.removeRoot()
+    //             game.addRoot()
+    //             console.log(game.locations[game.W][game.C])
+    //             game.locations[game.W][game.C].render()
+    //             game.currLocation = game.locations[game.W][game.C]
+    //         }
+    //     }
+    // })
 })
