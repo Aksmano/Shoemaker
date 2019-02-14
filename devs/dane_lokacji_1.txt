@@ -7,7 +7,7 @@ A hill, 13.gif, rgb(117,237,243)
 Some bushes, 14.gif, rgb(202,230,51)
 An old deserted hut, 15.gif, rgb(220,204,61)
 The edge of a forest, 16.gif, rgb(167,245,63)
-A dark forest, 17.gif, rgb(140,253,99)")
+A dark forest, 17.gif, rgb(140,253,99)
 
 WIERSZ 2:
 A man nearby making tar, 21.gif, rgb(255,190,99)
