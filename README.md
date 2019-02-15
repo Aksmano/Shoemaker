@@ -1,4 +1,3 @@
 # shoemaker
 
-Project for client application, Atari 8 bit game in JavaScript
-Only classes and objects
+Project of a game from Atari 8 bit for client applications in JavaScript, only classes and objects 

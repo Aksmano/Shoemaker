@@ -1,4 +1,6 @@
 import locInfo from "../data/locationsInfo.js"
+import items from "../data/items.js"
+import dependencies from "../data/dependencies.js"
 
 var game = {
     root: "",
