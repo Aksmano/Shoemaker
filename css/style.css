@@ -17,8 +17,16 @@ input{
     border:0px;
 }
 
-img{
+#view{
     border: 2px solid white;
+}
+
+#compass{
+    position: absolute;
+    left:500px;
+    top: 50px;;
+    width: 340.2px;
+    height: 162px;
 }
 
 body{

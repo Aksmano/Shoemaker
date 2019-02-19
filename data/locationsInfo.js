@@ -45,6 +45,6 @@ export default {
         { "info": "You are in a bleak funeral house", "imgFile": "64.gif", "backg": "rgb(254,194,97)", "dirs": ["E"] },
         { "info": "You are on a path leading to the wood", "imgFile": "26 i 65.gif", "backg": "rgb(167,245,63)", "dirs": ["W", "N", "E"] },
         { "info": "You are at the edge of a forest", "imgFile": "66.gif", "backg": "rgb(167,245,63)", "dirs": ["W", "N", "E"] },
-        { "info": "You are in a deep forest", "imgFile": "27 i 67.gif", "backg": "rgb(140,253,99)", "dirs": ["E"] }
+        { "info": "You are in a deep forest", "imgFile": "27 i 67.gif", "backg": "rgb(140,253,99)", "dirs": ["W"] }
     ]
 }

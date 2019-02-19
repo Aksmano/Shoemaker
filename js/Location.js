@@ -19,6 +19,7 @@ class Location {
         this.place.innerText = this.location.info
 
         this.image = document.createElement("img")
+        this.image.id = "view"
         this.image.src = "img/locations/" + this.location.imgFile
         this.image.alt = this.location.imgFile
         this.image.style.backgroundColor = this.location.backg
@@ -64,6 +65,11 @@ class Location {
         this.cmdLabel.appendChild(this.commandLine)
         this.container.appendChild(this.cmdLabel)
 
+        this.compass = document.createElement("img")
+        this.compass.id = "compass"
+        this.compass.src = "img/directions/" + this.location.dirs.join("") + ".png"
+        this.compass.alt = this.location.dirs.join("")
+
         console.log("done");
 
     }
@@ -73,7 +79,10 @@ class Location {
         this.root.appendChild(this.place)
         this.root.appendChild(this.image)
         this.root.appendChild(this.container)
+        this.root.appendChild(this.compass)
+
         document.onload = this.commandLine.focus()
+        document.onblur = this.commandLine.focus()
         document.addEventListener("click", () => { this.commandLine.focus() })
     }
 
@@ -99,6 +108,6 @@ class Location {
                 this.cmdLabel.innerText = "What now? "
                 this.cmdLabel.appendChild(this.commandLine)
                 this.commandLine.focus()
-            }, 1000)
+            }, 1500)
     }
 }
