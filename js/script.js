@@ -7,6 +7,7 @@ var game = {
     root: "",
     locations: [],
     currLocation: "",
+    destination: "You are going ",
     W: 3,
     C: 6,
     addRoot() {
@@ -38,24 +39,28 @@ var game = {
                     this.C--
                     this.removeRoot()
                     this.initGame()
+                    this.currLocation.labelStatment(this.destination + "west...")
                 }
                 else if ((val == "E" || val == "EAST") && this.currLocation.directions().includes(val[0])) {
                     this.C++
                     this.removeRoot()
                     this.initGame()
+                    this.currLocation.labelStatment(this.destination + "east...")
                 }
                 else if ((val == "N" || val == "NORTH") && this.currLocation.directions().includes(val[0])) {
                     this.W--
                     this.removeRoot()
                     this.initGame()
+                    this.currLocation.labelStatment(this.destination + "north...")
                 }
                 else if ((val == "S" || val == "SOUTH") && this.currLocation.directions().includes(val[0])) {
                     this.W++
                     this.removeRoot()
                     this.initGame()
+                    this.currLocation.labelStatment(this.destination + "south...")
                 }
-                else if(val == "V" || val == "VOCABULARY") this.currLocation.vocabulary()
-                else if(val == "G" || val == "GOSSIPS") this.currLocation.gossips()
+                else if(val == "V" || val == "VOCABULARY") this.currLocation.containerStatment("NORTH or N, SOUTH or S\nWEST or W, EAST or E\nTAKE (object) or T (object)\nDROP (object) or D (object)\nUSE (object) or U (object)\nGOSSIPS or G, VOCABULARY or V\nPress any key")
+                else if(val == "G" || val == "GOSSIPS") this.currLocation.containerStatment("The  woodcutter lost  his home key...\nThe butcher likes fruit... The cooper\nis greedy... Dratewka plans to make a\npoisoned  bait for the dragon...  The\ntavern owner is buying food  from the\npickers... Making a rag from a bag...\nPress any key")
             }
         })
     },

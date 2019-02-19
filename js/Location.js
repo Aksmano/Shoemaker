@@ -19,7 +19,7 @@ class Location {
         this.place.innerText = this.location.info
 
         this.image = document.createElement("img")
-        this.image.src = "img/" + this.location.imgFile
+        this.image.src = "img/locations/" + this.location.imgFile
         this.image.alt = this.location.imgFile
         this.image.style.backgroundColor = this.location.backg
         this.image.height = 200
@@ -81,8 +81,8 @@ class Location {
         return this.location.dirs
     }
 
-    vocabulary() {
-        this.container.innerText = "NORTH or N, SOUTH or S\nWEST or W, EAST or E\nTAKE (object) or T (object)\nDROP (object) or D (object)\nUSE (object) or U (object)\nGOSSIPS or G, VOCABULARY or V\nPress any key"
+    containerStatment(statment) {
+        this.container.innerText = statment
         document.onkeydown = (e) => {
             this.container.innerText = ""
             this.container.appendChild(this.direction)
@@ -90,20 +90,15 @@ class Location {
             this.container.appendChild(this.equipment)
             this.container.appendChild(this.cmdLabel)
             this.commandLine.focus()
-            document.onkeyup = () => { document.onkeydown = () => { } }
         }
     }
 
-    gossips() {
-        this.container.innerText = "The  woodcutter lost  his home key...\nThe butcher likes fruit... The cooper\nis greedy... Dratewka plans to make a\npoisoned  bait for the dragon...  The\ntavern owner is buying food  from the\npickers... Making a rag from a bag...\nPress any key"
-        document.onkeydown = (e) => {
-            this.container.innerText = ""
-            this.container.appendChild(this.direction)
-            this.container.appendChild(this.object)
-            this.container.appendChild(this.equipment)
-            this.container.appendChild(this.cmdLabel)
-            this.commandLine.focus()
-            document.onkeyup = () => { document.onkeydown = () => { } }
-        }
+    labelStatment(statment) {
+            this.cmdLabel.innerText = statment
+            setTimeout(() => {
+                this.cmdLabel.innerText = "What now? "
+                this.cmdLabel.appendChild(this.commandLine)
+                this.commandLine.focus()
+            }, 1000)
     }
 }
