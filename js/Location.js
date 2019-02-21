@@ -1,11 +1,15 @@
 class Location {
-    constructor(location, startItems, items) {
+    constructor(location, startItems, items, nameToItemID) {
         this.location = location
         this.root = document.getElementById("root")
         this.startItems = startItems
+        this.itemsQuantity = 0
+        this.currLocItems = [["", "nothing"]]
         this.items = items
+        this.nameToID = nameToItemID
+        this.locNumber = "L" + this.location.imgFile[0] + this.location.imgFile[1]
         // this.flag = 0
-        this.item = ""
+        // this.currItem = currItem
         this.init()
     }
 
@@ -41,17 +45,21 @@ class Location {
 
         this.object = document.createElement("p")
         this.object.id = "obj"
-        this.currObj = "nothing"
-        this.itemId = "L" + this.location.imgFile[0] + this.location.imgFile[1]
-        console.log(this.itemId)
+        // console.log(this.itemId)
         for (let i = 0; i < this.startItems.length; i++)
-            if (this.startItems[i].includes(this.itemId)) this.currObj = this.items[this.startItems[i][1]].form
-        this.object.innerText = "You see " + this.currObj
+            if (this.startItems[i].includes(this.locNumber)) {
+                this.currLocItems.pop()
+                this.currLocItems[0] = []
+                this.currLocItems[0].push(this.startItems[i][1])
+                this.currLocItems[0].push(this.items[this.startItems[i][1]].form)
+                this.currLocItems[0].push(this.items[this.startItems[i][1]].name)
+                this.itemsQuantity++
+            }
+        this.object.innerText = "You see " + this.currLocItems[0][1]
         this.container.appendChild(this.object)
 
         this.equipment = document.createElement("p")
         this.equipment.id = "eq"
-        this.equipment.innerText = "You are carrying "
         this.container.appendChild(this.equipment)
 
         this.cmdLabel = document.createElement("label")
@@ -70,28 +78,75 @@ class Location {
         this.compass.src = "img/directions/" + this.location.dirs.join("") + ".png"
         this.compass.alt = this.location.dirs.join("")
 
-        console.log("done");
+        console.log("location initialized");
 
     }
 
-    render() {
+    render(currItem) {
         this.root = document.getElementById("root")
         this.root.appendChild(this.place)
         this.root.appendChild(this.image)
+        if (currItem[0] != "") this.equipment.innerText = "You are carrying " + currItem[0]
+        else this.equipment.innerText = "You are carrying nothing"
         this.root.appendChild(this.container)
         this.root.appendChild(this.compass)
 
         document.onload = this.commandLine.focus()
         document.onblur = this.commandLine.focus()
         document.addEventListener("click", () => { this.commandLine.focus() })
+        console.log("location rendered")
+
     }
 
     directions() {
         return this.location.dirs
     }
 
+    dropItem(currItem) {
+        if (currItem[0] == "") this.labelStatment("You are not carrying anything")
+        else if (this.itemsQuantity >= 3) this.labelStatment("You can't store any more here")
+        else {
+            this.labelStatment("You are about to drop" + currItem[0])
+            this.itemsQuantity++
+            this.currLocItems.push(this.currItem)
+            currItem[0] = ""
+            currItem[1] = 0
+            console.log("item dropped")
+            return currItem
+        }
+        console.log("item not dropped")
+        return currItem
+    }
+
+    takeItem(currItem, newItem) {
+        console.log(newItem)
+        console.log(this.currLocItems)
+        for (let i = 0; i < this.itemsQuantity + 1; i++)
+            if (i == this.itemsQuantity) {
+                this.labelStatment("There isn't anything like that here")
+                console.log("item not taken")
+                return currItem
+            }
+            else if (newItem == this.currLocItems[i][2])
+                break
+        if (currItem[0] != "" || currItem[1] == 1) this.labelStatment("You are carrying something")
+        else if (!this.items[this.nameToID[newItem]].flag) this.labelStatment("You can't carry it")
+        else {
+            this.labelStatment("You are taking " + newItem)
+            currItem[0] = newItem
+            currItem[1] = 1
+            console.log("item taken")
+            this.changeText("eq", currItem)
+            this.changeText("obj", this.currLocItems)
+            return currItem
+        }
+        console.log("item not taken")
+        return currItem
+    }
+
     containerStatment(statment) {
         this.container.innerText = statment
+        console.log("container statment on")
         document.onkeydown = (e) => {
             this.container.innerText = ""
             this.container.appendChild(this.direction)
@@ -99,15 +154,34 @@ class Location {
             this.container.appendChild(this.equipment)
             this.container.appendChild(this.cmdLabel)
             this.commandLine.focus()
+            console.log("container statment off")
         }
     }
 
     labelStatment(statment) {
-            this.cmdLabel.innerText = statment
-            setTimeout(() => {
-                this.cmdLabel.innerText = "What now? "
-                this.cmdLabel.appendChild(this.commandLine)
-                this.commandLine.focus()
-            }, 1500)
+        this.cmdLabel.innerText = statment
+        console.log("label statment on")
+        setTimeout(() => {
+            this.cmdLabel.innerText = "What now? "
+            this.cmdLabel.appendChild(this.commandLine)
+            this.commandLine.focus()
+            console.log("label statment off")
+        }, 1500)
+    }
+
+    changeText(id, arr) {
+        var string = ""
+        if (id == "obj") {
+            for (let i = 0; id <= arr.length; i++) {
+                string += arr[i][1]
+                if (i < arr.length)
+                    string += ", "
+            }
+            document.getElementById(id).innerText = "You see " + string
+        }
+        else if (id == "eq") {
+            string = arr[0]
+            document.getElementById(id).innerText = "You are carrying " + string
+        }
     }
 }

@@ -10,7 +10,7 @@ export default {
     "I18": { "form": "BERRIES", "flag": 1, "name": "BERRIES" },
     "I19": { "form": "WOOL", "flag": 1, "name": "WOOL" },
     "I20": { "form": "a sheepskin", "flag": 0, "name": "sheepskin" },
-    "I21": { "form": "a BAG", "flag": 1, "name": "BAG " },
+    "I21": { "form": "a BAG", "flag": 1, "name": "BAG" },
     "I22": { "form": "a RAG", "flag": 1, "name": "RAG" },
     "I23": { "form": "a sheephead", "flag": 0, "name": "sheephead" },
     "I24": { "form": "a SPADE", "flag": 1, "name": "SPADE" },

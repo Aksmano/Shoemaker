@@ -1,5 +1,10 @@
 class Player {
-    constructor(){
+    constructor(currItem) {
+        this.currItem = currItem
+        this.init()
+    }
+
+    init() {
         
     }
 }
