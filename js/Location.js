@@ -4,7 +4,7 @@ class Location {
         this.root = document.getElementById("root")
         this.startItems = startItems
         this.itemsQuantity = 0
-        this.currLocItems = [["", "nothing"]]
+        this.currLocItems = []
         this.items = items
         this.nameToID = nameToItemID
         this.locNumber = "L" + this.location.imgFile[0] + this.location.imgFile[1]
@@ -51,11 +51,11 @@ class Location {
                 this.currLocItems.pop()
                 this.currLocItems[0] = []
                 this.currLocItems[0].push(this.startItems[i][1])
-                this.currLocItems[0].push(this.items[this.startItems[i][1]].form)
-                this.currLocItems[0].push(this.items[this.startItems[i][1]].name)
+                this.currLocItems[0].push(this.items[this.startItems[i][1]])
                 this.itemsQuantity++
             }
-        this.object.innerText = "You see " + this.currLocItems[0][1]
+        if (this.currLocItems.length != 0) this.object.innerText = "You see " + this.currLocItems[0][1].form
+        else this.object.innerText = "You see nothing"
         this.container.appendChild(this.object)
 
         this.equipment = document.createElement("p")
@@ -86,7 +86,7 @@ class Location {
         this.root = document.getElementById("root")
         this.root.appendChild(this.place)
         this.root.appendChild(this.image)
-        if (currItem[0] != "") this.equipment.innerText = "You are carrying " + currItem[0]
+        if (currItem != 0) this.equipment.innerText = "You are carrying " + currItem.form
         else this.equipment.innerText = "You are carrying nothing"
         this.root.appendChild(this.container)
         this.root.appendChild(this.compass)
@@ -94,6 +94,8 @@ class Location {
         document.onload = this.commandLine.focus()
         document.onblur = this.commandLine.focus()
         document.addEventListener("click", () => { this.commandLine.focus() })
+        console.log(this.currLocItems);
+
         console.log("location rendered")
 
     }
@@ -102,15 +104,21 @@ class Location {
         return this.location.dirs
     }
 
-    dropItem(currItem) {
-        if (currItem[0] == "") this.labelStatment("You are not carrying anything")
+    dropItem(currItem, dropped) {
+        console.log(currItem)
+        if (currItem == 0) this.labelStatment("You are not carrying anything")
         else if (this.itemsQuantity >= 3) this.labelStatment("You can't store any more here")
+        else if (dropped != currItem.name) this.labelStatment("You are not carrying it")
         else {
-            this.labelStatment("You are about to drop" + currItem[0])
+            this.labelStatment("You are about to drop " + currItem.form)
+            this.currLocItems.push([])
+            this.currLocItems[this.itemsQuantity].push(this.nameToID[dropped])
+            this.currLocItems[this.itemsQuantity].push(currItem)
             this.itemsQuantity++
-            this.currLocItems.push(this.currItem)
-            currItem[0] = ""
-            currItem[1] = 0
+            currItem = 0
+            console.log(this.currLocItems)
+            this.changeText("eq", currItem)
+            this.changeText("obj", this.currLocItems)
             console.log("item dropped")
             return currItem
         }
@@ -121,23 +129,25 @@ class Location {
     takeItem(currItem, newItem) {
         console.log(newItem)
         console.log(this.currLocItems)
-        for (let i = 0; i < this.itemsQuantity + 1; i++)
+        var i = 0
+        for (i; i < this.itemsQuantity + 1; i++)
             if (i == this.itemsQuantity) {
                 this.labelStatment("There isn't anything like that here")
                 console.log("item not taken")
                 return currItem
             }
-            else if (newItem == this.currLocItems[i][2])
+            else if (newItem == this.currLocItems[i][1].name)
                 break
-        if (currItem[0] != "" || currItem[1] == 1) this.labelStatment("You are carrying something")
+        if (currItem != 0) this.labelStatment("You are carrying something")
         else if (!this.items[this.nameToID[newItem]].flag) this.labelStatment("You can't carry it")
         else {
-            this.labelStatment("You are taking " + newItem)
-            currItem[0] = newItem
-            currItem[1] = 1
-            console.log("item taken")
+            this.currLocItems.splice(i, i + 1)
+            currItem = this.items[this.nameToID[newItem]]
+            this.itemsQuantity--
+            this.labelStatment("You are taking " + currItem.form)
             this.changeText("eq", currItem)
             this.changeText("obj", this.currLocItems)
+            console.log("item taken")
             return currItem
         }
         console.log("item not taken")
@@ -169,19 +179,24 @@ class Location {
         }, 1500)
     }
 
-    changeText(id, arr) {
+    changeText(id, object) {
         var string = ""
         if (id == "obj") {
-            for (let i = 0; id <= arr.length; i++) {
-                string += arr[i][1]
-                if (i < arr.length)
+            for (let i = 0; i < object.length; i++) {
+                string += object[i][1].form
+                if (i < object.length - 1)
                     string += ", "
             }
-            document.getElementById(id).innerText = "You see " + string
+            console.log(string)
+            console.log("SS" + object)
+            if (string != "") document.getElementById(id).innerText = "You see " + string
+            else document.getElementById(id).innerText = "You see nothing"
         }
         else if (id == "eq") {
-            string = arr[0]
-            document.getElementById(id).innerText = "You are carrying " + string
+            if (object != 0)
+                string = object.form
+            if (string != "") document.getElementById(id).innerText = "You are carrying " + string
+            else document.getElementById(id).innerText = "You are carrying nothing"
         }
     }
 }
