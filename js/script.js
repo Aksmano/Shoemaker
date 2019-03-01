@@ -8,7 +8,7 @@ var game = {
     root: "",
     locations: [],
     currLocation: "",
-    currItem: 0, // Zamiana na obiekt przy posiadaniu przedmioty
+    currItem: 0, // Zamiana na obiekt przy posiadaniu przedmiotu
     destination: "You are going ",
     whereToGo: ["W", "WEST", "N", "NORTH", "S", "SOUTH", "E", "EAST"],
     caps: 1,
@@ -38,16 +38,16 @@ var game = {
     },
     initLocations() {
         for (let i = 0; i < 6; i++) this.locations[i] = []
-        for (let i = 0; i < 7; i++) this.locations[0].push(new Location(locInfo.W1[i], startItems, items, nameToItemID))
-        for (let i = 0; i < 7; i++) this.locations[1].push(new Location(locInfo.W2[i], startItems, items, nameToItemID))
-        for (let i = 0; i < 7; i++) this.locations[2].push(new Location(locInfo.W3[i], startItems, items, nameToItemID))
-        for (let i = 0; i < 7; i++) this.locations[3].push(new Location(locInfo.W4[i], startItems, items, nameToItemID))
-        for (let i = 0; i < 7; i++) i >= 3 ? this.locations[4].push(new Location(locInfo.W5[i - 3], startItems, items, nameToItemID)) : this.locations[4].push(0)
-        for (let i = 0; i < 7; i++) i >= 3 ? this.locations[5].push(new Location(locInfo.W6[i - 3], startItems, items, nameToItemID)) : this.locations[5].push(0)
+        for (let i = 0; i < 7; i++) this.locations[0].push(new Location(locInfo.W1[i], startItems, items, nameToItemID, dependencies))
+        for (let i = 0; i < 7; i++) this.locations[1].push(new Location(locInfo.W2[i], startItems, items, nameToItemID, dependencies))
+        for (let i = 0; i < 7; i++) this.locations[2].push(new Location(locInfo.W3[i], startItems, items, nameToItemID, dependencies))
+        for (let i = 0; i < 7; i++) this.locations[3].push(new Location(locInfo.W4[i], startItems, items, nameToItemID, dependencies))
+        for (let i = 0; i < 7; i++) i >= 3 ? this.locations[4].push(new Location(locInfo.W5[i - 3], startItems, items, nameToItemID, dependencies)) : this.locations[4].push(0)
+        for (let i = 0; i < 7; i++) i >= 3 ? this.locations[5].push(new Location(locInfo.W6[i - 3], startItems, items, nameToItemID, dependencies)) : this.locations[5].push(0)
         console.log(this.locations);
     },
     travelTo(direction, d, p) {
-        this.currLocation.labelStatment(this.destination + direction)
+        this.currLocation.labelStatement(this.destination + direction, 1000)
         if (p == "++" && d == "C") this.C++
         else if (p == "--" && d == "C") this.C--
         else if (p == "++" && d == "W") this.W++
@@ -55,9 +55,9 @@ var game = {
         setTimeout(() => {
             this.removeRoot()
             this.initGame()
-        }, 1500)
+        }, 1000)
     },
-    addConsoleStatments() {
+    addConsoleStatements() {
         document.getElementById("cmd").addEventListener("keypress", (event) => {
             if (event.which == 13) {
                 var val = document.getElementById("cmd").value
@@ -70,37 +70,47 @@ var game = {
                 else if ((valSplitted[0] == "E" || valSplitted[0] == "EAST") && this.currLocation.directions().includes(val[0])) this.travelTo("east...", "C", "++")
                 else if ((valSplitted[0] == "N" || valSplitted[0] == "NORTH") && this.currLocation.directions().includes(val[0])) this.travelTo("north...", "W", "--")
                 else if ((valSplitted[0] == "S" || valSplitted[0] == "SOUTH") && this.currLocation.directions().includes(val[0])) this.travelTo("south...", "W", "++")
-                else if (valSplitted[0] == "V" || valSplitted[0] == "VOCABULARY") this.currLocation.containerStatment("NORTH or N, SOUTH or S\nWEST or W, EAST or E\nTAKE (object) or T (object)\nDROP (object) or D (object)\nUSE (object) or U (object)\nGOSSIPS or G, VOCABULARY or V\nPress any key")
-                else if (valSplitted[0] == "G" || valSplitted[0] == "GOSSIPS") this.currLocation.containerStatment("The  woodcutter lost  his home key...\nThe butcher likes fruit... The cooper\nis greedy... Dratewka plans to make a\npoisoned  bait for the dragon...  The\ntavern owner is buying food  from the\npickers... Making a rag from a bag...\nPress any key")
+                else if (valSplitted[0] == "V" || valSplitted[0] == "VOCABULARY") this.currLocation.containerStatement("NORTH or N, SOUTH or S\nWEST or W, EAST or E\nTAKE (object) or T (object)\nDROP (object) or D (object)\nUSE (object) or U (object)\nGOSSIPS or G, VOCABULARY or V\nPress any key")
+                else if (valSplitted[0] == "G" || valSplitted[0] == "GOSSIPS") this.currLocation.containerStatement("The  woodcutter lost  his home key...\nThe butcher likes fruit... The cooper\nis greedy... Dratewka plans to make a\npoisoned  bait for the dragon...  The\ntavern owner is buying food  from the\npickers... Making a rag from a bag...\nPress any key")
                 else if (valSplitted[0] == "D" || valSplitted[0] == "DROP") this.currItem = this.currLocation.dropItem(this.currItem, valSplitted[1])
                 else if (valSplitted[0] == "T" || valSplitted[0] == "TAKE") this.currItem = this.currLocation.takeItem(this.currItem, valSplitted[1])
-                // else if (valSplitted[0] == "U" || valSplitted[0] == "USE")
-                else if (val == "LET ME DIE") this.currLocation.labelStatment("Life is beatiful <3")
-                else if (val == "GRZEGORZ") this.currLocation.labelStatment("Brzeczyszczykiewicz?")
-                else if (val == "OPEN THE DOOR HAL") this.currLocation.labelStatment("I think it's impossible Dave...")
-                else if (val == "AKSMAN PIES") this.currLocation.labelStatment("Nie ladnie tak mowic Mati...")
-                else if (val == "POP") this.currLocation.labelStatment("You can't pop it")
-                else if (val == "AAAAA") this.currLocation.labelStatment("WHY ARE U RUNNIN'?")
-                else if ((this.whereToGo.includes(valSplitted[0]) && !(this.currLocation.directions().includes(val[0])))) this.currLocation.labelStatment("You can't go that way...")
-                else if (val || val == event.which) this.currLocation.labelStatment("Try another word or V for vocabulary")
+                else if (valSplitted[0] == "U" || valSplitted[0] == "USE") this.currItem = this.currLocation.useItem(this.currItem, valSplitted[1])
+                else if (valSplitted[0] == "GIB") this.currItem = this.currLocation.gib(valSplitted[1])
+                else if (val == "LET ME DIE") this.currLocation.labelStatement("Life is beatiful <3", 1500)
+                else if (val == "GRZEGORZ") this.currLocation.labelStatement("Brzeczyszczykiewicz?", 1500)
+                else if (val == "OPEN THE DOOR HAL") this.currLocation.labelStatement("I think it's impossible Dave...", 2500)
+                else if (val == "AKSMAN PIES") this.currLocation.labelStatement("Nie ladnie tak mowic Mati...", 2500)
+                else if (val == "POP") this.currLocation.labelStatement("You can't pop it", 1500)
+                else if (val == "AAAAA") this.currLocation.labelStatement("WHY ARE U RUNNIN'?", 1500)
+                else if ((this.whereToGo.includes(valSplitted[0]) && !(this.currLocation.directions().includes(val[0])))) this.currLocation.labelStatement("You can't go that way...")
+                else if (val || val == event.which) this.currLocation.labelStatement("Try another word or V for vocabulary")
             }
-            // else if(event.which == 9) document.getElementById("cmd").focus()
-            else if (event.which == 20 && this.caps == 1) {
-                document.getElementById("cmd").value.toLowerCase()
-                this.caps = 0
-            }
-            else if (event.which == 20 && this.caps == 0) {
-                document.getElementById("cmd").value.toUpperCase()
-                this.caps = 1
+            // else if (event.which == 9) {
+            //     event.preventDefault()
+            //     document.getElementById("cmd").focus()
+            // }
+            // else if (event.which == 20 && this.caps == 1) {
+            //     document.getElementById("cmd").value.toLowerCase()
+            //     this.caps = 0
+            // }
+            // else if (event.which == 20 && this.caps == 0) {
+            //     document.getElementById("cmd").value.toUpperCase()
+            //     this.caps = 1
+            // }
+        })
+        document.getElementById("cmd").addEventListener("keydown", (e) => {
+            if(e.which == 9){
+                console.log("don't push a tab lad lmao");
+                e.preventDefault()
+                document.getElementById("cmd").focus()
             }
         })
-        // document.getElementById("cmd").addEventListener()
     },
     initGame() {
         this.addRoot()
         this.currLocation = this.locations[this.W][this.C]
         this.currLocation.render(this.currItem)
-        this.addConsoleStatments()
+        this.addConsoleStatements()
     }
 }
 
