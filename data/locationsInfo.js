@@ -14,8 +14,8 @@ export default {
         { "info": "You are by a roadside shrine", "imgFile": "23.gif", "backg": "rgb(167,245,63)", "dirs": ["W", "N", "S", "E"] }, // 6
         { "info": "You are by a small chapel", "imgFile": "24.gif", "backg": "rgb(212,229,36)", "dirs": ["W", "E"] },
         { "info": "You are on a road leading to a wood", "imgFile": "25.gif", "backg": "rgb(167,245,63)", "dirs": ["W", "S", "E"] },
-        { "info": "You are in a forest", "imgFile": "26 i 65.gif", "backg": "rgb(167,245,63)", "dirs": ["W", "E"] },
-        { "info": "You are in a deep forest", "imgFile": "27 i 67.gif", "backg": "rgb(140,253,99)", "dirs": ["W", "N"] } // 7
+        { "info": "You are in a forest", "imgFile": "26.gif", "backg": "rgb(167,245,63)", "dirs": ["W", "E"] },
+        { "info": "You are in a deep forest", "imgFile": "27.gif", "backg": "rgb(140,253,99)", "dirs": ["W", "N"] } // 7
     ],
     "W3": [
         { "info": "You are by the Vistula River", "imgFile": "31.gif", "backg": "rgb(122,232,252)", "dirs": ["N", "E"] }, // 8
@@ -43,8 +43,8 @@ export default {
     ],
     "W6": [
         { "info": "You are in a bleak funeral house", "imgFile": "64.gif", "backg": "rgb(254,194,97)", "dirs": ["E"] },
-        { "info": "You are on a path leading to the wood", "imgFile": "26 i 65.gif", "backg": "rgb(167,245,63)", "dirs": ["W", "N", "E"] },
+        { "info": "You are on a path leading to the wood", "imgFile": "65.gif", "backg": "rgb(167,245,63)", "dirs": ["W", "N", "E"] },
         { "info": "You are at the edge of a forest", "imgFile": "66.gif", "backg": "rgb(167,245,63)", "dirs": ["W", "N", "E"] },
-        { "info": "You are in a deep forest", "imgFile": "27 i 67.gif", "backg": "rgb(140,253,99)", "dirs": ["W"] }
+        { "info": "You are in a deep forest", "imgFile": "67.gif", "backg": "rgb(140,253,99)", "dirs": ["W"] }
     ]
 }

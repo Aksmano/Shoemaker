@@ -14,7 +14,7 @@ export default {
     "I27": { "coords": "L21", "newItemId": "I28", "flag": 1, "statement": "You got a bucket full of tar", "OK": "" },
     "I28": { "coords": "L43", "newItemId": "I29", "flag": 0, "statement": "You prepared a liquid poison", "OK": "OK" },
     "IOK": { "coords": "L43", "newItemId": "I37", "flag": 1, "statement": "Your fake sheep is full of poison and ready to be eaten by the dragon", "OK": "" },
-    "I37": { "coords": "L43", "newItemId": "I30", "flag": 0, "statement": "The dragon noticed your gift...(timeout)The dragon ate your sheep and died!", "OK": "", "graphic": "" },
+    "I37": { "coords": "L43", "newItemId": "I30", "flag": 0, "statement": "The dragon noticed your gift...(timeout)The dragon ate your sheep and died!", "OK": "OK", "graphic": "DS68.bmp" },
     "I33": { "coords": "L43", "newItemId": "I34", "flag": 1, "statement": "You cut a piece of dragon's skin", "OK": "" },
     "I34": { "coords": "L57", "newItemId": "I35", "flag": 1, "statement": "You used your tools to make shoes", "OK": "" },
     "I35": { "coords": "L41", "newItemId": "I36", "flag": 1, "statement": "The King is impressed by your shoes", "OK": "" },

@@ -11,6 +11,7 @@ var game = {
     currItem: 0, // Zamiana na obiekt przy posiadaniu przedmiotu
     destination: "You are going ",
     whereToGo: ["W", "WEST", "N", "NORTH", "S", "SOUTH", "E", "EAST"],
+    sleepingDragon: ["You can't go that way... ", "The dragon sleeps in a cave!"],
     caps: 1,
     W: 3,
     C: 6,
@@ -47,14 +48,46 @@ var game = {
         console.log(this.locations);
     },
     travelTo(direction, d, p) {
-        this.currLocation.labelStatement(this.destination + direction, 1000)
         if (p == "++" && d == "C") this.C++
         else if (p == "--" && d == "C") this.C--
         else if (p == "++" && d == "W") this.W++
         else if (p == "--" && d == "W") this.W--
+        if ((this.W + 1).toString() + (this.C + 1).toString() + ".gif" == "41.gif" && this.locations[3][2].returnOK() < 7) {
+            this.C++
+            var cmd = document.getElementById("cmd")
+            var caret = document.getElementById("caret")
+            document.getElementById("cmdLabel").innerText = this.sleepingDragon[0]
+            setTimeout(() => {
+                var p = document.createElement("p")
+                p.innerText = this.sleepingDragon[1]
+                document.getElementById("cmdLabel").appendChild(p)
+            },2000)
+            setTimeout(() => {
+                document.getElementById("cmdLabel").innerText = "What now? "
+                document.getElementById("cmdLabel").appendChild(cmd)
+                document.getElementById("cmdLabel").appendChild(caret)
+                document.getElementById("cmd").focus()
+                document.getElementById("caret").style.left = '163px'
+
+            },4000)
+            return
+        }
+        else {
+            this.currLocation.labelStatement(this.destination + direction, 1000)
+        }
+        console.log(this.currItem);
         setTimeout(() => {
             this.removeRoot()
-            this.initGame()
+            this.initLocation()
+        }, 1000)
+    },
+    teleportTo(where) {
+        this.currLocation.labelStatement(this.destination + where, 1000)
+        this.W = parseInt(where[0]) - 1
+        this.C = parseInt(where[1]) - 1
+        setTimeout(() => {
+            this.removeRoot()
+            this.initLocation()
         }, 1000)
     },
     addConsoleStatements() {
@@ -74,8 +107,9 @@ var game = {
                 else if (valSplitted[0] == "G" || valSplitted[0] == "GOSSIPS") this.currLocation.containerStatement("The  woodcutter lost  his home key...\nThe butcher likes fruit... The cooper\nis greedy... Dratewka plans to make a\npoisoned  bait for the dragon...  The\ntavern owner is buying food  from the\npickers... Making a rag from a bag...\nPress any key")
                 else if (valSplitted[0] == "D" || valSplitted[0] == "DROP") this.currItem = this.currLocation.dropItem(this.currItem, valSplitted[1])
                 else if (valSplitted[0] == "T" || valSplitted[0] == "TAKE") this.currItem = this.currLocation.takeItem(this.currItem, valSplitted[1])
-                else if (valSplitted[0] == "U" || valSplitted[0] == "USE") this.currItem = this.currLocation.useItem(this.currItem, valSplitted[1])
+                else if (valSplitted[0] == "U" || valSplitted[0] == "USE") { this.currItem = this.currLocation.useItem(this.currItem, valSplitted[1]); console.log(this.currItem) }
                 else if (valSplitted[0] == "GIB") this.currItem = this.currLocation.gib(valSplitted[1])
+                else if (valSplitted[0] == "TP") this.teleportTo(valSplitted[1])
                 else if (val == "LET ME DIE") this.currLocation.labelStatement("Life is beatiful <3", 1500)
                 else if (val == "GRZEGORZ") this.currLocation.labelStatement("Brzeczyszczykiewicz?", 1500)
                 else if (val == "OPEN THE DOOR HAL") this.currLocation.labelStatement("I think it's impossible Dave...", 2500)
@@ -99,22 +133,24 @@ var game = {
             // }
         })
         document.getElementById("cmd").addEventListener("keydown", (e) => {
-            if(e.which == 9){
+            if (e.which == 9) {
                 console.log("don't push a tab lad lmao");
                 e.preventDefault()
                 document.getElementById("cmd").focus()
             }
         })
     },
-    initGame() {
+    initLocation() {
+        console.log(this.currItem);
         this.addRoot()
         this.currLocation = this.locations[this.W][this.C]
         this.currLocation.render(this.currItem)
         this.addConsoleStatements()
+
     }
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {
     game.initLocations()
-    game.initGame()
+    game.initLocation()
 })
