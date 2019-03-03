@@ -138,27 +138,7 @@ class Location {
         document.onblur = this.commandLine.focus()
         document.addEventListener("click", () => { this.commandLine.focus() })
         console.log(this.currLocItems);
-
-        // if (this.image.src == "42.gif" && this.OK < 7) {
-        //     this.cmdLabel.innerText = this.sleepingDragon[0]
-        //     var i = 1
-        //     var x = setInterval(() => {
-        //         var p = document.createElement("p")
-        //         p.innerText = this.sleepingDragon[i]
-        //         this.cmdLabel.appendChild(p)
-        //         i++
-        //         if (i == 2) {
-        //             this.cmdLabel.innerText = "What now? "
-        //             this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
-        //             this.cmdLabel.appendChild(this.commandLine)
-        //             this.cmdLabel.appendChild(this.caret)
-        //             this.commandLine.focus()
-        //             console.log("power rangers")
-        //             clearInterval(x)
-        //         }
-        //     }, 2000)
-        // }
-
+        
         console.log("location rendered")
 
     }
