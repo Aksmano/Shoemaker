@@ -37,6 +37,39 @@ var game = {
         valSplitted.push(instructions)
         return valSplitted
     },
+    introImage(img, src) {
+        img.src = "img/" + src
+        img.className = "endImg"
+        return img
+    },
+    intro() {
+        var dratewka = document.createElement("div")
+        var dratewkaImg = document.createElement("img")
+        var descA = document.createElement("div")
+        var descAImg = document.createElement("img")
+        var descB = document.createElement("div")
+        var descBImg = document.createElement("img")
+        var audio = document.createElement("audio")
+        
+        audio.src = "audio/hejnal.wav"
+        audio.id = "audio"
+        audio.loop = true
+        audio.autoplay = true
+        audio.volume = 0.3
+        document.body.appendChild(audio)
+
+        descB.className = "endDiv"
+        descB.appendChild(this.introImage(descBImg, "desc_b.jpg"))
+        document.body.appendChild(descB)
+
+        descA.className = "endDiv"
+        descA.appendChild(this.introImage(descAImg, "desc_a.jpg"))
+        document.body.appendChild(descA)
+
+        dratewka.className = "endDiv"
+        dratewka.appendChild(this.introImage(dratewkaImg, "dratewka.jpg"))
+        document.body.appendChild(dratewka)
+    },
     initLocations() {
         for (let i = 0; i < 6; i++) this.locations[i] = []
         for (let i = 0; i < 7; i++) this.locations[0].push(new Location(locInfo.W1[i], startItems, items, nameToItemID, dependencies))
@@ -61,7 +94,7 @@ var game = {
                 var p = document.createElement("p")
                 p.innerText = this.sleepingDragon[1]
                 document.getElementById("cmdLabel").appendChild(p)
-            },2000)
+            }, 2000)
             setTimeout(() => {
                 document.getElementById("cmdLabel").innerText = "What now? "
                 document.getElementById("cmdLabel").appendChild(cmd)
@@ -69,7 +102,7 @@ var game = {
                 document.getElementById("cmd").focus()
                 document.getElementById("caret").style.left = '163px'
 
-            },4000)
+            }, 4000)
             return
         }
         else {
@@ -119,22 +152,10 @@ var game = {
                 else if ((this.whereToGo.includes(valSplitted[0]) && !(this.currLocation.directions().includes(val[0])))) this.currLocation.labelStatement("You can't go that way...")
                 else if (val || val == event.which) this.currLocation.labelStatement("Try another word or V for vocabulary")
             }
-            // else if (event.which == 9) {
-            //     event.preventDefault()
-            //     document.getElementById("cmd").focus()
-            // }
-            // else if (event.which == 20 && this.caps == 1) {
-            //     document.getElementById("cmd").value.toLowerCase()
-            //     this.caps = 0
-            // }
-            // else if (event.which == 20 && this.caps == 0) {
-            //     document.getElementById("cmd").value.toUpperCase()
-            //     this.caps = 1
-            // }
         })
         document.getElementById("cmd").addEventListener("keydown", (e) => {
             if (e.which == 9) {
-                console.log("don't push a tab lad lmao");
+                console.log("don't push tab lad lmao");
                 e.preventDefault()
                 document.getElementById("cmd").focus()
             }
@@ -152,5 +173,20 @@ var game = {
 
 document.addEventListener("DOMContentLoaded", (event) => {
     game.initLocations()
-    game.initLocation()
+    game.intro()
+    var k = 0
+    document.onkeypress = () => {
+        console.log("Onkeypress")
+        if (document.body.lastChild) {
+            k++
+            if (k == 1)
+                document.body.removeChild(document.getElementById("audio"))
+            document.body.removeChild(document.body.lastChild)
+            if (k == 3) {
+                game.initLocation()
+                setTimeout(() => { document.getElementById("cmd").value = ""; document.getElementById("caret").style.left = "163px" }, 1)
+                document.onkeypress = () => { }
+            }
+        }
+    }
 })

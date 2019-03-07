@@ -80,9 +80,10 @@ class Location {
             if (e.which == 8) this.backspace = 1
             console.log(this.backspace)
         }
-        this.commandLine.oninput = (e) => {
+        this.commandLine.oninput = () => {
             this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
-            if (this.backspace == 0 || this.commandLine.value.length != 0)
+            console.log("Backspace before " + this.backspace)
+            if (this.backspace == 0)
                 if (this.caps == 1) {
                     var letter = this.commandLine.value[this.commandLine.value.length - 1].toUpperCase()
                     var arr = []
@@ -102,7 +103,8 @@ class Location {
                     console.log("to lower");
                 }
             this.backspace = 0
-            console.log("DUBZGO " + this.caps)
+            console.log("Backspace after " + this.backspace)
+            console.log("Caps " + this.caps)
         }
         this.cmdLabel.appendChild(this.commandLine)
         this.cmdLabel.appendChild(this.caret)
@@ -120,7 +122,7 @@ class Location {
     gib(newItem) {
         this.equipment.innerText = "You are carrying " + newItem
         this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
-        if(newItem == "SHEEP") this.OK = 6
+        if (newItem == "SHEEP") this.OK = 6
         console.log(this.OK)
         return this.items[this.nameToID[newItem]]
     }
@@ -138,7 +140,7 @@ class Location {
         document.onblur = this.commandLine.focus()
         document.addEventListener("click", () => { this.commandLine.focus() })
         console.log(this.currLocItems);
-        
+
         console.log("location rendered")
 
     }
@@ -155,6 +157,23 @@ class Location {
         console.log("usedItem: " + usedItem)
         if (usedItem != currItem.name || currItem == 0) {
             this.labelStatement("You aren't carrying anything like that")
+            currItem = currItem
+            console.log("item not used");
+            return currItem
+        }
+        else if (usedItem == "PRIZE") {
+            let end = document.createElement("div")
+            let img = document.createElement("img")
+            img.src = "img/endScreen2.jpg"
+            img.className = "endImg"
+            end.className = "endDiv"
+            while (document.body.firstChild)
+                document.body.removeChild(document.body.firstChild)
+            end.appendChild(img)
+            document.body.appendChild(end)
+        }
+        else if (this.dependencies[this.nameToID[usedItem]] == undefined) {
+            this.labelStatement("Nothing happened")
             currItem = currItem
             console.log("item not used");
             return currItem
@@ -178,6 +197,7 @@ class Location {
                         this.changeText("eq", currItem)
                         this.changeText("obj", this.currLocItems)
                     }, 4000)
+                    console.log(this.OK)
                     return currItem
                 }
                 else {

@@ -18,5 +18,5 @@ export default {
     "I33": { "coords": "L43", "newItemId": "I34", "flag": 1, "statement": "You cut a piece of dragon's skin", "OK": "" },
     "I34": { "coords": "L57", "newItemId": "I35", "flag": 1, "statement": "You used your tools to make shoes", "OK": "" },
     "I35": { "coords": "L41", "newItemId": "I36", "flag": 1, "statement": "The King is impressed by your shoes", "OK": "" },
-    "U36": { "statement": "", "graphic": "" },
+    // "I36": { "statement": "", "graphic": "" },
 }

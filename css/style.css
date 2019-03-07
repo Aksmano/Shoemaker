@@ -5,8 +5,8 @@
 
 *{
     font-family: PressStart;
-    color: #A4A1B0;
-    background-color: #3C3C3C;
+    color: rgb(190, 189, 194);
+    background-color: rgb(43, 41, 41);
 }
 
 #root{
@@ -14,11 +14,10 @@
 }
 
 input{
-    /* height: 100%; */
     border:0px;
-    color: transparent /*#A4A1B0*/;
+    color: transparent;
     background-color: transparent;
-    text-shadow: 0 0 #A4A1B0;
+    text-shadow: 0 0 rgb(190, 189, 194);
 }
 
 #caret{
@@ -27,7 +26,7 @@ input{
     left: 163px;
     width: 18px;
     height: 18px;
-    background-color: #A4A1B0;
+    background-color: rgb(190, 189, 194);
     display: inline-block;
 }
 
@@ -50,4 +49,16 @@ input{
 body{
     overflow: hidden;
     margin-top:0;
+}
+
+.endDiv{
+    position: absolute;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+}
+
+.endImg{
+    width: 100vw;
+    height: 100vh;
 }
