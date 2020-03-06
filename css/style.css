@@ -5,8 +5,8 @@
 
 *{
     font-family: PressStart;
-    color: #A4A1B0;
-    background-color: #3C3C3C;
+    color: rgb(190, 189, 194);
+    background-color: rgb(43, 41, 41);
 }
 
 #root{
@@ -15,6 +15,19 @@
 
 input{
     border:0px;
+    color: transparent;
+    background-color: transparent;
+    text-shadow: 0 0 rgb(190, 189, 194);
+}
+
+#caret{
+    position: absolute;
+    top: -1px;
+    left: 163px;
+    width: 18px;
+    height: 18px;
+    background-color: rgb(190, 189, 194);
+    display: inline-block;
 }
 
 #view{
@@ -24,12 +37,28 @@ input{
 #compass{
     position: absolute;
     left:400px;
-    top: 50px;;
+    top: 50px;
     width: 340.2px;
     height: 162px;
+}
+
+#cmdLabel{
+    position: relative;
 }
 
 body{
     overflow: hidden;
     margin-top:0;
+}
+
+.endDiv{
+    position: absolute;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+}
+
+.endImg{
+    width: 100vw;
+    height: 100vh;
 }

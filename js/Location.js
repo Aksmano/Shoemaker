@@ -1,5 +1,5 @@
 class Location {
-    constructor(location, startItems, items, nameToItemID) {
+    constructor(location, startItems, items, nameToItemID, dependencies) {
         this.location = location
         this.root = document.getElementById("root")
         this.startItems = startItems
@@ -7,9 +7,12 @@ class Location {
         this.currLocItems = []
         this.items = items
         this.nameToID = nameToItemID
+        this.dependencies = dependencies
         this.locNumber = "L" + this.location.imgFile[0] + this.location.imgFile[1]
-        // this.flag = 0
-        // this.currItem = currItem
+        this.OK = 0
+        this.caps = 1
+        this.backspace = 0
+        this.sleepingDragon = ["You can't go that way... ", "The dragon sleeps in a cave!"]
         this.init()
     }
 
@@ -69,8 +72,42 @@ class Location {
         this.commandLine.id = "cmd"
         this.commandLine.type = "text"
         this.commandLine.maxLength = 20
-        this.commandLine.addEventListener("input", () => { this.commandLine.value = this.commandLine.value.toUpperCase() })
+        this.caret = document.createElement("div")
+        this.caret.id = "caret"
+        this.commandLine.onkeydown = (e) => {
+            if (e.which == 20 && this.caps == 1) this.caps = 0
+            else if (e.which == 20 && this.caps == 0) this.caps = 1
+            if (e.which == 8) this.backspace = 1
+            console.log(this.backspace)
+        }
+        this.commandLine.oninput = () => {
+            this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
+            console.log("Backspace before " + this.backspace)
+            if (this.backspace == 0)
+                if (this.caps == 1) {
+                    var letter = this.commandLine.value[this.commandLine.value.length - 1].toUpperCase()
+                    var arr = []
+                    arr = this.commandLine.value.split("")
+                    arr.pop()
+                    arr.push(letter)
+                    this.commandLine.value = arr.join("")
+                    console.log("to upper");
+                }
+                else if (this.caps == 0) {
+                    var letter = this.commandLine.value[this.commandLine.value.length - 1].toLowerCase()
+                    var arr = []
+                    arr = this.commandLine.value.split("")
+                    arr.pop()
+                    arr.push(letter)
+                    this.commandLine.value = arr.join("")
+                    console.log("to lower");
+                }
+            this.backspace = 0
+            console.log("Backspace after " + this.backspace)
+            console.log("Caps " + this.caps)
+        }
         this.cmdLabel.appendChild(this.commandLine)
+        this.cmdLabel.appendChild(this.caret)
         this.container.appendChild(this.cmdLabel)
 
         this.compass = document.createElement("img")
@@ -80,6 +117,14 @@ class Location {
 
         console.log("location initialized");
 
+    }
+
+    gib(newItem) {
+        this.equipment.innerText = "You are carrying " + newItem
+        this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
+        if (newItem == "SHEEP") this.OK = 6
+        console.log(this.OK)
+        return this.items[this.nameToID[newItem]]
     }
 
     render(currItem) {
@@ -104,25 +149,114 @@ class Location {
         return this.location.dirs
     }
 
+    returnOK() {
+        return this.OK
+    }
+
+    useItem(currItem, usedItem) {
+        console.log("usedItem: " + usedItem)
+        if (usedItem != currItem.name || currItem == 0) {
+            this.labelStatement("You aren't carrying anything like that")
+            currItem = currItem
+            console.log("item not used");
+            return currItem
+        }
+        else if (usedItem == "PRIZE") {
+            let end = document.createElement("div")
+            let img = document.createElement("img")
+            img.src = "img/endScreen2.jpg"
+            img.className = "endImg"
+            end.className = "endDiv"
+            while (document.body.firstChild)
+                document.body.removeChild(document.body.firstChild)
+            end.appendChild(img)
+            document.body.appendChild(end)
+        }
+        else if (this.dependencies[this.nameToID[usedItem]] == undefined) {
+            this.labelStatement("Nothing happened")
+            currItem = currItem
+            console.log("item not used");
+            return currItem
+        }
+        else if (this.dependencies[this.nameToID[usedItem]].coords != this.locNumber) {
+            this.labelStatement("Nothing happened")
+            currItem = currItem
+            console.log("item not used");
+            return currItem
+        }
+        else {
+            if (this.dependencies[this.nameToID[usedItem]].flag == 0) {
+                if (this.dependencies[this.nameToID[usedItem]].OK == "OK") this.OK++
+                if (usedItem == "SHEEP") {
+                    this.currLocItems.push([])
+                    this.currLocItems[this.currLocItems.length - 1].push(this.dependencies[this.nameToID[usedItem]].newItemId, this.items[this.dependencies[this.nameToID[usedItem]].newItemId])
+                    console.log(this.currLocItems);
+                    this.labelDragon(currItem, usedItem)
+                    currItem = 0
+                    setTimeout(() => {
+                        this.changeText("eq", currItem)
+                        this.changeText("obj", this.currLocItems)
+                    }, 4000)
+                    console.log(this.OK)
+                    return currItem
+                }
+                else {
+                    this.currLocItems.push([this.dependencies[this.nameToID[usedItem]].newItemId, this.items[this.dependencies[this.nameToID[usedItem]].newItemId]])
+                    currItem = 0
+                    this.labelStatement(this.dependencies[this.nameToID[usedItem]].statement)
+                    this.changeText("eq", currItem)
+                    this.changeText("obj", this.currLocItems)
+                    console.log(this.OK);
+                    if (this.OK == 6) {
+                        this.labelStatement(this.dependencies["IOK"].statement)
+                        currItem = this.items["I37"]
+                        this.changeText("eq", currItem)
+                        for (let i = 0; i < this.currLocItems.length; i++)
+                            if (this.currLocItems[i][1].flag == 0) {
+                                this.currLocItems.splice(i, 1)
+                                i = -1
+                            }
+                        this.changeText("obj", this.currLocItems)
+                        console.log("you get a sheep")
+                    }
+                }
+                console.log("item used for milestone")
+                return currItem
+            }
+            else if (this.dependencies[this.nameToID[usedItem]].statement.includes("(timeout)")) {
+                currItem = this.items[this.dependencies[this.nameToID[usedItem]].newItemId]
+                this.labelTimeout(currItem, usedItem)
+                return currItem
+            }
+            else {
+                this.labelStatement(this.dependencies[this.nameToID[usedItem]].statement)
+                currItem = this.items[this.dependencies[this.nameToID[usedItem]].newItemId]
+                this.changeText("eq", currItem)
+                console.log("item used")
+                return currItem
+            }
+        }
+    }
+
     dropItem(currItem, dropped) {
         console.log(currItem)
-        if (currItem == 0) this.labelStatment("You are not carrying anything")
-        else if (this.itemsQuantity >= 3) this.labelStatment("You can't store any more here")
-        else if (dropped != currItem.name) this.labelStatment("You are not carrying it")
+        if (currItem == 0) this.labelStatement("You are not carrying anything")
+        else if (this.itemsQuantity >= 3) this.labelStatement("You can't store any more here")
+        else if (dropped != currItem.name) this.labelStatement("You are not carrying it")
         else {
-            this.labelStatment("You are about to drop " + currItem.form)
-            this.currLocItems.push([])
-            this.currLocItems[this.itemsQuantity].push(this.nameToID[dropped])
-            this.currLocItems[this.itemsQuantity].push(currItem)
+            this.labelStatement("You are about to drop " + currItem.form)
+            this.currLocItems.push([this.nameToID[dropped], currItem])
             this.itemsQuantity++
             currItem = 0
             console.log(this.currLocItems)
             this.changeText("eq", currItem)
             this.changeText("obj", this.currLocItems)
             console.log("item dropped")
+            this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
             return currItem
         }
         console.log("item not dropped")
+        this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
         return currItem
     }
 
@@ -130,33 +264,35 @@ class Location {
         console.log(newItem)
         console.log(this.currLocItems)
         var i = 0
-        for (i; i < this.itemsQuantity + 1; i++)
-            if (i == this.itemsQuantity) {
-                this.labelStatment("There isn't anything like that here")
+        for (i; i < this.currLocItems.length + 1; i++)
+            if (i == this.currLocItems.length) {
+                this.labelStatement("There isn't anything like that here")
                 console.log("item not taken")
                 return currItem
             }
             else if (newItem == this.currLocItems[i][1].name)
                 break
-        if (currItem != 0) this.labelStatment("You are carrying something")
-        else if (!this.items[this.nameToID[newItem]].flag) this.labelStatment("You can't carry it")
+        if (currItem != 0) this.labelStatement("You are carrying something")
+        else if (!this.items[this.nameToID[newItem]].flag) this.labelStatement("You can't carry it")
         else {
-            this.currLocItems.splice(i, i + 1)
+            this.currLocItems.splice(i, 1)
             currItem = this.items[this.nameToID[newItem]]
             this.itemsQuantity--
-            this.labelStatment("You are taking " + currItem.form)
+            this.labelStatement("You are taking " + currItem.form)
             this.changeText("eq", currItem)
             this.changeText("obj", this.currLocItems)
             console.log("item taken")
+            this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
             return currItem
         }
         console.log("item not taken")
+        this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
         return currItem
     }
 
-    containerStatment(statment) {
-        this.container.innerText = statment
-        console.log("container statment on")
+    containerStatement(statement) {
+        this.container.innerText = statement
+        console.log("container statement on")
         document.onkeydown = (e) => {
             this.container.innerText = ""
             this.container.appendChild(this.direction)
@@ -164,19 +300,24 @@ class Location {
             this.container.appendChild(this.equipment)
             this.container.appendChild(this.cmdLabel)
             this.commandLine.focus()
-            console.log("container statment off")
+            console.log("container statement off")
         }
     }
 
-    labelStatment(statment) {
-        this.cmdLabel.innerText = statment
-        console.log("label statment on")
+    labelStatement(statement, pause) {
+        if (pause === undefined)
+            pause = 1500
+        this.cmdLabel.innerText = statement
+        console.log("label statement on")
         setTimeout(() => {
             this.cmdLabel.innerText = "What now? "
+            this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
             this.cmdLabel.appendChild(this.commandLine)
+            this.cmdLabel.appendChild(this.caret)
             this.commandLine.focus()
-            console.log("label statment off")
-        }, 1500)
+            console.log("label statement off")
+        }, pause)
+        return
     }
 
     changeText(id, object) {
@@ -188,7 +329,7 @@ class Location {
                     string += ", "
             }
             console.log(string)
-            console.log("SS" + object)
+            console.log(object)
             if (string != "") document.getElementById(id).innerText = "You see " + string
             else document.getElementById(id).innerText = "You see nothing"
         }
@@ -198,5 +339,56 @@ class Location {
             if (string != "") document.getElementById(id).innerText = "You are carrying " + string
             else document.getElementById(id).innerText = "You are carrying nothing"
         }
+    }
+
+    labelTimeout(currItem, usedItem) {
+        var sStatement = this.dependencies[this.nameToID[usedItem]].statement.split("(timeout)")
+        this.cmdLabel.innerText = sStatement[0]
+        var i = 1
+        var x = setInterval(() => {
+            var p = document.createElement("p")
+            p.innerText = sStatement[i]
+            this.cmdLabel.appendChild(p)
+            i++
+            if (i == sStatement.length + 1) {
+                this.cmdLabel.innerText = "What now? "
+                this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
+                this.cmdLabel.appendChild(this.commandLine)
+                this.cmdLabel.appendChild(this.caret)
+                this.commandLine.focus()
+                this.changeText("eq", currItem)
+                console.log(currItem);
+                console.log("item used")
+                console.log("Spade has been made/dragon has been slained")
+                clearInterval(x)
+            }
+        }, 2000)
+    }
+
+    labelDragon(currItem, usedItem) {
+        var sStatement = this.dependencies[this.nameToID[usedItem]].statement.split("(timeout)")
+        console.log(sStatement);
+        this.cmdLabel.innerText = sStatement[0]
+        var i = 1
+        var x = setInterval(() => {
+            var p = document.createElement("p")
+            p.innerText = sStatement[i]
+            this.cmdLabel.appendChild(p)
+            i++
+            if (i == sStatement.length) {
+                this.image.src = "img/locations/" + this.dependencies[this.nameToID[usedItem]].graphic
+            }
+            if (i == sStatement.length + 1) {
+                clearInterval(x)
+                this.cmdLabel.innerText = "What now? "
+                this.caret.style.left = (((this.commandLine.value.length) * 15) + 163) + 'px'
+                this.cmdLabel.appendChild(this.commandLine)
+                this.cmdLabel.appendChild(this.caret)
+                this.commandLine.focus()
+                console.log(currItem);
+                console.log("item used")
+                console.log("Dragon has been slained")
+            }
+        }, 2000)
     }
 }
