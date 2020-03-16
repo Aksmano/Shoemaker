@@ -5,8 +5,8 @@
 
 * {
   font-family: PressStart;
-  color: #a4a1b0;
-  background-color: #3c3c3c;
+  color: rgb(190, 189, 194);
+  background-color: rgb(43, 41, 41);
 }
 
 #root {
@@ -16,6 +16,19 @@
 input {
   border: none;
   outline: none;
+  color: transparent;
+  background-color: transparent;
+  text-shadow: 0 0 rgb(190, 189, 194);
+}
+
+#caret {
+  position: absolute;
+  top: -1px;
+  left: 163px;
+  width: 18px;
+  height: 18px;
+  background-color: rgb(190, 189, 194);
+  display: inline-block;
 }
 
 #view {
@@ -30,7 +43,23 @@ input {
   height: 162px;
 }
 
+#cmdLabel {
+  position: relative;
+}
+
 body {
   overflow: hidden;
   margin-top: 0;
+}
+
+.endDiv {
+  position: absolute;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+}
+
+.endImg {
+  width: 100vw;
+  height: 100vh;
 }
