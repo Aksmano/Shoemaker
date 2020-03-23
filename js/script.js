@@ -272,7 +272,14 @@ var game = {
         console.log("don't push tab lad lmao");
         e.preventDefault();
         document.getElementById("cmd").focus();
+      } else if (e.which == 20 && this.caps == 1) {
+        document.getElementById("cmd").value.toUpperCase();
+        this.caps = 0;
+      } else if (e.which == 20 && this.caps == 0) {
+        document.getElementById("cmd").value.toUpperCase();
+        this.caps = 1;
       }
+      document.getElementById("cmd").value.toUpperCase();
     });
   },
   initLocation() {
